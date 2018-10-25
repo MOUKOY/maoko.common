@@ -1,8 +1,8 @@
 package soft.common.log;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,7 @@ import soft.common.model.system.LogLevel;
 public class LogWriter implements IWriteLog {
 
 	private Logger log;
-	public final static String CONFIGFILE = "/config/log4j2.xml";
+	public final static String CONFIGFILE = "config/log4j2.xml";
 
 	/**
 	 * 初始化log4j
@@ -25,8 +25,11 @@ public class LogWriter implements IWriteLog {
 		try {
 			String filepath = PathUtil.combinePath(RunPath, CONFIGFILE);
 			File file = new File(filepath);
-			if (!file.exists())
-				throw new FileNotFoundException(filepath + " is not exist");
+			if (!file.exists())// 不存在使用默认值
+			{
+				String appLogPath = LogWriter.class.getClassLoader().getResource(CONFIGFILE).getPath();
+				file = new File(URLDecoder.decode(appLogPath, "utf-8"));
+			}
 
 			// InputStream in =
 			// ConfigUtil.class.getClassLoader().getResourceAsStream("log4j2.xml");
