@@ -41,14 +41,12 @@ public class XmlReadUtil {
 	/**
 	 * 获取指定节点值
 	 * 
-	 * @param parentElement 父节点
-	 * @param eleName       指定子节点名称
+	 * @param element 指定节点
 	 * @return
 	 * @throws XMLParseException
 	 */
-	public String getElementValue(Element parentElement, String eleName) throws XMLParseException {
-		return XmlParseUtil.getElementValue(parentElement, eleName, true);
-
+	public String getElementValue(Element element) throws XMLParseException {
+		return XmlParseUtil.getElementValue(element, true);
 	}
 
 	public Element getElement(Element parentElement, String eleName) throws XMLParseException {
