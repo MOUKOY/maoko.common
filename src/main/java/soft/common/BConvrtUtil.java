@@ -1,7 +1,7 @@
 package soft.common;
 
 /**
- * 整数 & byte[]转换助手--地位在前，高位在后
+ * 整数 & byte[]转换助手-低位在前，高位在后
  * 
  * @author fanpei
  *
@@ -89,6 +89,22 @@ public class BConvrtUtil extends StaticClass {
 		return b;
 	}
 
+	/**
+	 * 高位在前 低位在后
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public static byte[] hIntToByte(int number) {
+		int temp = number;
+		byte[] b = new byte[4];
+		for (int i = b.length - 1; i > 0; i--) {
+			b[i] = (byte) (temp & 0xff);
+			temp = temp >> 8; // 向右移8位
+		}
+		return b;
+	}
+
 	public static int byteToInt(byte[] b) {
 		int s = 0;
 		int s0 = 0;
@@ -106,6 +122,34 @@ public class BConvrtUtil extends StaticClass {
 		s3 <<= 24;
 		s2 <<= 16;
 		s1 <<= 8;
+		s = s0 | s1 | s2 | s3;
+		return s;
+	}
+
+	/**
+	 * 高位在前,低位在后
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static int hByteToInt(byte[] b) {
+		int s = 0;
+		int s0 = 0;
+		int s1 = 0;
+		int s2 = 0;
+		int s3 = 0;
+
+		s0 = b[0] & 0xff;// 最高位
+		if (b.length > 1)
+			s1 = b[1] & 0xff;
+		if (b.length > 2)
+			s2 = b[2] & 0xff;
+		if (b.length > 3)
+			s3 = b[3] & 0xff;
+
+		s2 >>= 8;
+		s1 >>= 16;
+		s0 >>= 24;
 		s = s0 | s1 | s2 | s3;
 		return s;
 	}
