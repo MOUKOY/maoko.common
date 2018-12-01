@@ -1,5 +1,8 @@
 package soft.common;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import soft.common.exception.DataIsNullException;
 
 /**
@@ -42,6 +45,29 @@ public class InstanceUitl extends StaticClass {
 					StringUtil.getMsgStr("dscr:{}, Class<T> type  is null,creat object is null", dscr));
 
 		return els.newInstance();
+
+	}
+	/**
+	 * @param dscr
+	 * @param els
+	 * @param initargs 构造函数参数
+	 * @return
+	 * @throws DataIsNullException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	public static <T> T createObject(String dscr, Class<T> els,Object initargs)
+			throws DataIsNullException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+		if (els == null)
+			throw new DataIsNullException(
+					StringUtil.getMsgStr("dscr:{}, Class<T> type  is null,creat object is null", dscr));
+
+		Constructor<T> ct = els.getConstructor(initargs.getClass());
+		return ct.newInstance(initargs);
 
 	}
 }

@@ -57,7 +57,7 @@ public class ClassUtil extends StaticClass {
 					// 以文件的方式扫描整个包下的文件 并添加到集合中
 					findAndAddClassesInPackageByFile(packageName, filePath, fileter, anno, recursive, classes);
 				} else if ("jar".equals(protocol)) {
-					findAndAddClassesInPackageByJar(classes, packageName, packageDirName, url, fileter, anno,
+					findAndAddClassesInPackageByJar(classes, packageDirName, url, fileter, anno,
 							recursive);
 				}
 			}
@@ -128,8 +128,9 @@ public class ClassUtil extends StaticClass {
 	 * @param recursive
 	 * @return
 	 */
-	private static String findAndAddClassesInPackageByJar(Set<Class<?>> classes, String packageName,
-			String packageDirName, URL url, String fileter, Class<? extends Annotation> anno, boolean recursive) {
+	private static String findAndAddClassesInPackageByJar(Set<Class<?>> classes, String packageDirName, URL url,
+			String fileter, Class<? extends Annotation> anno, boolean recursive) {
+		String packageName = null;
 		// 如果是jar包文件
 		// 定义一个JarFile
 		// System.err.println("jar类型的扫描");
@@ -149,8 +150,10 @@ public class ClassUtil extends StaticClass {
 					// 获取后面的字符串
 					name = name.substring(1);
 				}
+
 				// 如果前半部分和定义的包名相同
 				if (name.startsWith(packageDirName)) {
+					packageName = packageDirName;
 					int idx = name.lastIndexOf('/');
 					// 如果以"/"结尾 是一个包
 					if (idx != -1) {
