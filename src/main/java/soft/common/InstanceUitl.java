@@ -47,6 +47,7 @@ public class InstanceUitl extends StaticClass {
 		return els.newInstance();
 
 	}
+	
 	/**
 	 * @param dscr
 	 * @param els
@@ -60,11 +61,8 @@ public class InstanceUitl extends StaticClass {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public static <T> T createObject(String dscr, Class<T> els,Object initargs)
+	public static <T> T createObject( Class<T> els,Object initargs)
 			throws DataIsNullException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
-		if (els == null)
-			throw new DataIsNullException(
-					StringUtil.getMsgStr("dscr:{}, Class<T> type  is null,creat object is null", dscr));
 
 		Constructor<T> ct = els.getConstructor(initargs.getClass());
 		return ct.newInstance(initargs);

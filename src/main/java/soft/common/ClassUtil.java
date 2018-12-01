@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import soft.common.file.PathUtil;
+
 /**
  * 获取类助手
  * 
@@ -22,6 +24,61 @@ import java.util.jar.JarFile;
  *
  */
 public class ClassUtil extends StaticClass {
+	private static final String FILETER = ".class";
+
+	/**
+	 * 从包package中制定注解的获取所有的Class
+	 * 
+	 * @param packageNameClassName 带包路径的类名
+	 * @param anno                 待匹配的注解，为空时忽略
+	 * @return
+	 */
+	public static Class<?> getSingleClass(String packageNameClassName, Class<? extends Annotation> anno) {
+		String fileter = ".class";
+		// 第一个class类的集合
+		Set<Class<?>> classes = new LinkedHashSet<>();
+		// 是否循环迭代
+		boolean recursive = false;
+		// 获取包的名字 并进行替换
+		String packageName = PathUtil.getParentDir(packageNameClassName);
+		String packageDirName = packageName.replace('.', '/');
+		// 定义一个枚举的集合 并进行循环来处理这个目录下的things
+		Enumeration<URL> dirs;
+		try {
+			dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+			// 循环迭代下去
+			while (dirs.hasMoreElements()) {
+				// 获取下一个元素
+				URL url = dirs.nextElement();
+				// 得到协议的名称
+				String protocol = url.getProtocol();
+				// 如果是以文件的形式保存在服务器上
+				if ("file".equals(protocol)) {
+					findSingleClassInPackageByFile(packageNameClassName, anno, classes);
+				} else if ("jar".equals(protocol)) {
+					findAndAddClassesInPackageByJar(classes, packageDirName, url, fileter, anno, recursive);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return classes.iterator().next();// 只获取一个
+	}
+
+	public static void findSingleClassInPackageByFile(String packageNameClassName, Class<? extends Annotation> anno,
+			Set<Class<?>> classes) {
+		try {
+			Class<?> clazz = matchAnno(packageNameClassName, anno);
+			if (null != clazz) {
+				classes.add(clazz);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// log.error("添加用户自定义视图类错误 找不到此类的.class文件");
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 从包package中制定注解的获取所有的Class
@@ -31,7 +88,7 @@ public class ClassUtil extends StaticClass {
 	 * @return
 	 */
 	public static Set<Class<?>> getClasses(String pack, Class<? extends Annotation> anno) {
-		String fileter = ".class";
+
 		// 第一个class类的集合
 		Set<Class<?>> classes = new LinkedHashSet<>();
 		// 是否循环迭代
@@ -55,10 +112,9 @@ public class ClassUtil extends StaticClass {
 					// 获取包的物理路径
 					String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
 					// 以文件的方式扫描整个包下的文件 并添加到集合中
-					findAndAddClassesInPackageByFile(packageName, filePath, fileter, anno, recursive, classes);
+					findAndAddClassesInPackageByFile(packageName, filePath, FILETER, anno, recursive, classes);
 				} else if ("jar".equals(protocol)) {
-					findAndAddClassesInPackageByJar(classes, packageDirName, url, fileter, anno,
-							recursive);
+					findAndAddClassesInPackageByJar(classes, packageDirName, url, FILETER, anno, recursive);
 				}
 			}
 		} catch (IOException e) {
@@ -87,7 +143,7 @@ public class ClassUtil extends StaticClass {
 			// log.warn("用户定义包名 " + packageName + " 下没有任何文件");
 			return;
 		}
-		// 如果存在 就获取包下的所有文件 包括目录
+		// 如果存在 就获取包下的所有文件 不包括目录
 		File[] dirfiles = dir.listFiles(new FileFilter() {
 			// 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
 			public boolean accept(File file) {
@@ -104,7 +160,7 @@ public class ClassUtil extends StaticClass {
 				// 如果是java类文件 去掉后面的.class 只留下类名
 				String className = file.getName().substring(0, file.getName().length() - fileter.length());
 				try {
-					Class<?> clazz = matchAnno(packageName, className, anno);
+					Class<?> clazz = matchAnno(packageName + "." + className, anno);
 					if (null != clazz) {
 						classes.add(clazz);
 					}
@@ -168,7 +224,7 @@ public class ClassUtil extends StaticClass {
 							String className = name.substring(packageName.length() + 1,
 									name.length() - fileter.length());
 							try {
-								Class<?> clazz = matchAnno(packageName, className, anno);
+								Class<?> clazz = matchAnno(packageName + "." + className, anno);
 								if (null != clazz) {
 									classes.add(clazz);
 								}
@@ -189,15 +245,14 @@ public class ClassUtil extends StaticClass {
 	/**
 	 * 匹配注解
 	 * 
-	 * @param packageName
-	 * @param className
+	 * @param packageNameClassName
 	 * @param anno
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	private static Class<?> matchAnno(String packageName, String className, Class<? extends Annotation> anno)
+	private static Class<?> matchAnno(String packageNameClassName, Class<? extends Annotation> anno)
 			throws ClassNotFoundException {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(packageName + '.' + className);
+		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(packageNameClassName);
 		boolean find = true;
 		if (anno != null) {
 			find = false;
