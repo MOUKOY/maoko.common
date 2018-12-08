@@ -76,10 +76,8 @@ public class StringUtil extends StaticClass {
 	/**
 	 * 整形字符串转换成进制字符串前面补0
 	 * 
-	 * @param srcStr
-	 *            待补0字段
-	 * @param resultLength
-	 *            补0后字符串整数部分需要达到多长，例如0x1001，的整数部分长为4
+	 * @param srcStr       待补0字段
+	 * @param resultLength 补0后字符串整数部分需要达到多长，例如0x1001，的整数部分长为4
 	 * @return 返回字符串格式为:0x0....的格式
 	 */
 	public static String addZeroStart(String srcStr, int resultLength) {
@@ -98,8 +96,7 @@ public class StringUtil extends StaticClass {
 	/**
 	 * 获取字符串utf-8编码的字节数组
 	 * 
-	 * @param srcStr
-	 *            待编码字符串
+	 * @param srcStr 待编码字符串
 	 * @return
 	 */
 	public static byte[] getUtf8Bytes(String srcStr) {
@@ -117,8 +114,7 @@ public class StringUtil extends StaticClass {
 	/**
 	 * 从字符串utf-8字节数组中创建字符串
 	 * 
-	 * @param bytes
-	 *            待创建字符串字节数组
+	 * @param bytes 待创建字符串字节数组
 	 * @return
 	 */
 	public static String getUtf8Str(byte[] bytes) {
@@ -150,10 +146,8 @@ public class StringUtil extends StaticClass {
 	/**
 	 * 将字符串按照指定的分割符进行分割
 	 * 
-	 * @param str
-	 *            源字符串
-	 * @param c
-	 *            分隔符
+	 * @param str 源字符串
+	 * @param c   分隔符
 	 * @return
 	 */
 	public static String[] spilt(String str, String c) {
@@ -336,13 +330,32 @@ public class StringUtil extends StaticClass {
 	/**
 	 * 组装信息
 	 * 
-	 * @param message
-	 *            包含{}的字符串描述
-	 * @param params
-	 *            参数
+	 * @param message 包含{}的字符串描述
+	 * @param params  参数
 	 * @return
 	 */
 	public static String getMsgStr(String message, Object... params) {
 		return log4j2StringStrcat.getMsgStr(message, params);
+	}
+
+	/**
+	 * 十六进制字符串转byte数组
+	 * 
+	 * @param hexValues 十六进制表示 如48 65 6C 6C 6F 20 57 6F 72 6C 64 21 以空格分隔
+	 * @return
+	 */
+	public static byte[] hexStr2Bytes(String hexValues) {
+		byte[] datas = null;
+		if (!StringUtil.isStringNull(hexValues)) {
+			hexValues = hexValues.replaceAll(" ", "");
+			int Len = hexValues.length() / 2;
+			datas = new byte[Len];
+			for (int x = 0; x < Len; x++) {
+				String hex = hexValues.substring(x * 2, x * 2 + 2);
+				datas[x] = (byte) Integer.parseInt(hex, 16);
+			}
+		}
+
+		return datas;
 	}
 }

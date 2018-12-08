@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import soft.common.file.PathUtil;
 import soft.common.model.system.LogLevel;
 
-public class LogWriter implements IWriteLog {
+public class Log4j2Writer implements IWriteLog {
 
 	private Logger log;
 	public final static String CONFIGFILE = "config/log4j2.xml";
@@ -27,7 +27,7 @@ public class LogWriter implements IWriteLog {
 			File file = new File(filepath);
 			if (!file.exists())// 不存在使用默认值
 			{
-				String appLogPath = LogWriter.class.getClassLoader().getResource(CONFIGFILE).getPath();
+				String appLogPath = Log4j2Writer.class.getClassLoader().getResource(CONFIGFILE).getPath();
 				file = new File(URLDecoder.decode(appLogPath, "utf-8"));
 			}
 
@@ -58,11 +58,11 @@ public class LogWriter implements IWriteLog {
 		LogManager.shutdown();
 	}
 
-	public LogWriter(Class<?> clas) {
+	public Log4j2Writer(Class<?> clas) {
 		log = LogManager.getLogger(clas);
 	}
 
-	public LogWriter(String dscp) {
+	public Log4j2Writer(String dscp) {
 		log = LogManager.getLogger(dscp);
 	}
 

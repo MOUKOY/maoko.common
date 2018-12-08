@@ -194,4 +194,28 @@ public class BConvrtUtil extends StaticClass {
 		return newData;
 	}
 
+	/**
+	 * 获取高四位
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static int getHeight4(byte data) {
+		int height;
+		height = ((data & 0xf0) >> 4);
+		return height;
+	}
+
+	/**
+	 * 获取低四位
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static int getLow4(byte data) {
+		int low;
+		low = (data & 0x0f);
+		return low;
+	}
+
 }

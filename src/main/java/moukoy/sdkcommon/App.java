@@ -1,6 +1,6 @@
 package moukoy.sdkcommon;
 
-import soft.common.log.LogWriter;
+import soft.common.log.Log4j2Writer;
 import soft.common.log.LoginitException;
 
 /**
@@ -16,7 +16,7 @@ public class App {
 	 * @throws LoginitException
 	 */
 	public static void init(String runpath) throws LoginitException {
-		LogWriter.init(runpath);
+		Log4j2Writer.init(runpath);
 	}
 
 	public static void main(String[] args) {
