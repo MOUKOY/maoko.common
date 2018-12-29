@@ -253,14 +253,14 @@ public class StringUtil extends StaticClass {
 	}
 
 	public static char[] byte2HexChars(byte b) {
-		char[] chars = null;
-		if (b < 16) {
-			chars = new char[1];
-			chars[0] = HEX_CHAR[b & 0xf];
+		char[] chars = new char[2];
+		short s = ByteAbsUtil.toUnsigned(b);
+		if (s < 16) {
+			chars[0] = HEX_CHAR[0 & 0xf];
+			chars[1] = HEX_CHAR[s & 0xf];
 		} else {
-			chars = new char[2];
-			chars[0] = HEX_CHAR[b >>> 4 & 0xf];
-			chars[1] = HEX_CHAR[b & 0xf];
+			chars[0] = HEX_CHAR[s >>> 4 & 0xf];
+			chars[1] = HEX_CHAR[s & 0xf];
 		}
 		return chars;
 	}
