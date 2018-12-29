@@ -279,6 +279,7 @@ public class StringUtil extends StaticClass {
 		StringBuilder strb = new StringBuilder();
 		for (byte b : bytes) {
 			strb.append(byte2HexChars(b));
+			strb.append(" ");
 		}
 		return strb.toString();
 
