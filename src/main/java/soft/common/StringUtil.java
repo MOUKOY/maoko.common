@@ -273,15 +273,21 @@ public class StringUtil extends StaticClass {
 	 */
 	public static String bytes2HexStr(byte[] bytes) {
 
-		if (bytes == null || bytes.length <= 0) {
+		if (bytes == null) {
 			return null;
 		}
-		StringBuilder strb = new StringBuilder();
-		for (byte b : bytes) {
-			strb.append(byte2HexChars(b));
-			strb.append(" ");
+		if (bytes.length > 0) {
+			StringBuilder strb = new StringBuilder();
+			int index = 0;
+			for (byte b : bytes) {
+				++index;
+				strb.append(byte2HexChars(b));
+				if (index != bytes.length)
+					strb.append(" ");
+			}
+			return strb.toString();
 		}
-		return strb.toString();
+		return "";
 
 	}
 
