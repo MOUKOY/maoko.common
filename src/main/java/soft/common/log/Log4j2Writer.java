@@ -30,7 +30,7 @@ public class Log4j2Writer implements IWriteLog {
 				String appLogPath = Log4j2Writer.class.getClassLoader().getResource(CONFIGFILE).getPath();
 				file = new File(URLDecoder.decode(appLogPath, "utf-8"));
 			}
-
+			System.out.println("log4j2.xml path " + file.getAbsolutePath());
 			// InputStream in =
 			// ConfigUtil.class.getClassLoader().getResourceAsStream("log4j2.xml");
 			// FileCopy.copy(in, filepath, false);
