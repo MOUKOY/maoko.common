@@ -61,4 +61,14 @@ public class AppRunPathUitl extends StaticClass {
 
 	}
 
+	/**
+	 * 获取是jar包启动 还是class file启动
+	 * 
+	 * @return
+	 */
+	public static String getRunProtocol(Class<?> clazz) {
+		URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
+		return url.getProtocol();
+	}
+
 }

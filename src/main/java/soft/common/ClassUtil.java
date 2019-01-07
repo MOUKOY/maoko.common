@@ -23,24 +23,27 @@ import java.util.jar.JarFile;
  *
  */
 public class ClassUtil extends StaticClass {
+
+	// private static final IWriteLog log = new Log4j2Writer(ClassUtil.class);
 	private static final String FILETER = ".class";
+	private static final String PACKAGE_FILETER = ".";// 包分隔符
 
 	/**
-	 * 从包package中制定注解的获取所有的Class
+	 * 从包package中指定注解的获取单个的Class
 	 * 
-	 * @param packageNameClassName 带包路径的类名
-	 * @param anno                 待匹配的注解，为空时忽略
+	 * @param packageClassPath 带包路径的类名
+	 * @param anno             待匹配的注解，为空时忽略
 	 * @return
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static Class<?> getSingleClass(String packageNameClassName, Class<? extends Annotation> anno)
+	public static Class<?> getSingleClass(String packageClassPath, Class<? extends Annotation> anno)
 			throws ClassNotFoundException, NoSuchElementException {
-		return matchAnno(packageNameClassName, anno);
+		return matchAnno(packageClassPath, anno);
 	}
 
 	/**
-	 * 从包package中制定注解的获取所有的Class
+	 * 从包package中获取指定注解的所有的Class-不递归
 	 * 
 	 * @param pack 包名
 	 * @param anno 待匹配的注解，为空时忽略
@@ -49,33 +52,57 @@ public class ClassUtil extends StaticClass {
 	 */
 	public static Set<Class<?>> getClasses(String pack, Class<? extends Annotation> anno)
 			throws ClassNotFoundException {
+		return getClasses(pack, anno, false);
+	}
+
+	/**
+	 * 从包package中获取指定注解的所有的Class
+	 * 
+	 * @param packageName 包名
+	 * @param anno        待匹配的注解，为空时忽略
+	 * @param recursive   是否递归获取
+	 * @return
+	 * @throws ClassNotFoundException
+	 */
+	public static Set<Class<?>> getClasses(String packageName, Class<? extends Annotation> anno, boolean recursive)
+			throws ClassNotFoundException {
 
 		// 第一个class类的集合
 		Set<Class<?>> classes = new LinkedHashSet<>();
-		// 是否循环迭代
-		boolean recursive = false;
-		// 获取包的名字 并进行替换
-		String packageName = pack;
-		String packageDirName = packageName.replace('.', '/');
-		// 定义一个枚举的集合 并进行循环来处理这个目录下的things
-		Enumeration<URL> dirs;
+		// String packageDirName = packageName.replace('.', '/');
+
 		try {
-			dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+			// 得到协议的名称
+
+			// String protocol = AppRunPathUitl.getRunProtocol(ClassUtil.class);
+			// dirs =
+			// Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+
+//			String protocol = "jar";
+//			URL urlJar = new File(
+//					"E:\\study\\project\\electroniclock\\ElectronicLock\\releaseTmp\\gpslock_2019-01-08.jar").toURI()
+//							.toURL();
+//			URL[] urls = new URL[] { urlJar };
+//			@SuppressWarnings("resource")
+//			URLClassLoader loader = new URLClassLoader(urls);
+//			dirs = loader.getResources(packageDirName);
+
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			String packagePath = packageName.replace(".", "/");
+			Enumeration<URL> dirs = loader.getResources(packagePath);
+
 			// 循环迭代下去
 			while (dirs.hasMoreElements()) {
-				// 获取下一个元素
+
 				URL url = dirs.nextElement();
-				// 得到协议的名称
 				String protocol = url.getProtocol();
 				// 如果是以文件的形式保存在服务器上
 				if ("file".equals(protocol)) {
-					// System.err.println("file类型的扫描");
 					// 获取包的物理路径
 					String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
-					// 以文件的方式扫描整个包下的文件 并添加到集合中
-					findAndAddClassesInPackageByFile(packageName, filePath, FILETER, anno, recursive, classes);
+					findClassesInPackByFileAndAdd(packageName, filePath, anno, recursive, classes);
 				} else if ("jar".equals(protocol)) {
-					findAndAddClassesInPackageByJar(classes, packageDirName, url, FILETER, anno, recursive);
+					findClassesInPackByJarAndAdd(packagePath, url, anno, recursive, classes);
 				}
 			}
 		} catch (IOException e) {
@@ -91,41 +118,37 @@ public class ClassUtil extends StaticClass {
 	 * @param packageName
 	 * @param packagePath
 	 * @param fileter     筛选函数
-	 * @param anno        带匹配的注解
+	 * @param anno        指定注解
 	 * @param recursive   是否递归
 	 * @param classes     存储类列表
 	 * @throws ClassNotFoundException
 	 */
-	public static void findAndAddClassesInPackageByFile(String packageName, String packagePath, final String fileter,
+	public static void findClassesInPackByFileAndAdd(String packageName, String filePath,
 			Class<? extends Annotation> anno, final boolean recursive, Set<Class<?>> classes)
 			throws ClassNotFoundException {
+
 		// 获取此包的目录 建立一个File
-		File dir = new File(packagePath);
+		File file = new File(filePath);
 		// 如果不存在或者 也不是目录就直接返回
-		if (!dir.exists() || !dir.isDirectory()) {
-			// log.warn("用户定义包名 " + packageName + " 下没有任何文件");
+		if (!file.exists() || !file.isDirectory()) {
+			System.err.println("用户定义包名 " + packageName + " 下没有任何文件");
 			return;
 		}
-		// 如果存在 就获取包下的所有文件 不包括目录
-		File[] dirfiles = dir.listFiles(new FileFilter() {
+		// 如果存在 就获取包下的所有文件
+		File[] dirfiles = file.listFiles(new FileFilter() {
 			// 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
 			public boolean accept(File file) {
-				return (recursive && file.isDirectory()) || (file.getName().endsWith(fileter));
+				return (recursive && file.isDirectory()) || (file.getName().endsWith(FILETER));
 			}
 		});
 		// 循环所有文件
-		for (File file : dirfiles) {
+		for (File f : dirfiles) {
+			String packFilePath = packageName + PACKAGE_FILETER + f.getName();
 			// 如果是目录 则继续扫描
-			if (file.isDirectory()) {
-				findAndAddClassesInPackageByFile(packageName + "." + file.getName(), file.getAbsolutePath(), fileter,
-						anno, recursive, classes);
+			if (f.isDirectory()) {
+				findClassesInPackByFileAndAdd(packFilePath, f.getAbsolutePath(), anno, recursive, classes);
 			} else {
-				// 如果是java类文件 去掉后面的.class 只留下类名
-				String className = file.getName().substring(0, file.getName().length() - fileter.length());
-				Class<?> clazz = matchAnno(packageName + "." + className, anno);
-				if (null != clazz) {
-					classes.add(clazz);
-				}
+				addToStore(packFilePath, anno, classes);
 			}
 		}
 	}
@@ -133,31 +156,18 @@ public class ClassUtil extends StaticClass {
 	/**
 	 * 扫描包类文件
 	 * 
-	 * @param classes
-	 * @param packageName
-	 * @param packageDirName
-	 * @param url
-	 * @param fileter
-	 * @param recursive
-	 * @return
+	 * @param packageDirName 包名
+	 * @param url            文件地址url形式
+	 * @param anno           指定注解
+	 * @param recursive      是否递归
+	 * @param classes        存储类列表
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	private static void findAndAddClassesInPackageByJar(Set<Class<?>> classes, String packageDirName, URL url,
-			String fileter, Class<? extends Annotation> anno, boolean recursive) throws ClassNotFoundException {
-		String packageName = null;
-		// 如果是jar包文件
-		// 定义一个JarFile
-		// System.err.println("jar类型的扫描");
-		JarFile jar = null;
-
+	private static void findClassesInPackByJarAndAdd(String packageDirName, URL url, Class<? extends Annotation> anno,
+			boolean recursive, Set<Class<?>> classes) throws ClassNotFoundException, IOException {
 		// 获取jar
-		try {
-			jar = ((JarURLConnection) url.openConnection()).getJarFile();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
 		if (jar != null) {
 			// 从此jar包 得到一个枚举类
 			Enumeration<JarEntry> entries = jar.entries();
@@ -166,31 +176,24 @@ public class ClassUtil extends StaticClass {
 				// 获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文件
 				JarEntry entry = entries.nextElement();
 				String name = entry.getName();
-				// 如果是以/开头的
-				if (name.charAt(0) == '/') {
-					// 获取后面的字符串
-					name = name.substring(1);
-				}
-
-				// 如果前半部分和定义的包名相同
-				if (name.startsWith(packageDirName)) {
-					packageName = packageDirName;
-					int idx = name.lastIndexOf('/');
-					// 如果以"/"结尾 是一个包
-					if (idx != -1) {
-						// 获取包名 把"/"替换成"."
-						packageName = name.substring(0, idx).replace('/', '.');
+				if (name.endsWith(FILETER)) {
+					// 如果是以/开头的
+					if (name.charAt(0) == '/') {
+						name = name.substring(1);// 获取后面的字符串
 					}
-					// 如果可以迭代下去 并且是一个包
-					if ((idx != -1) || recursive) {
-						// 如果是一个.class文件 而且不是目录
-						if (name.endsWith(".class") && !entry.isDirectory()) {
-							// 去掉后面的".class" 获取真正的类名
-							String className = name.substring(packageName.length() + 1,
-									name.length() - fileter.length());
-							Class<?> clazz = matchAnno(packageName + "." + className, anno);
-							if (null != clazz) {
-								classes.add(clazz);
+					int idx = name.lastIndexOf('/');
+
+					boolean goOn = false;
+					if (!recursive) {// 排除掉其余包
+						String parentDir = name.substring(0, idx);
+						goOn = packageDirName.equals(parentDir);
+					}
+					if (goOn) {
+						if (idx != -1) {
+							// 如果是一个.class文件 而且不是目录
+							if (!entry.isDirectory()) {
+								name = name.replace("/", PACKAGE_FILETER);
+								addToStore(name, anno, classes);
 							}
 						}
 					}
@@ -200,30 +203,46 @@ public class ClassUtil extends StaticClass {
 	}
 
 	/**
+	 * 添加到类仓库
+	 * 
+	 * @param fileClassPath 类的带包路径
+	 * @param anno          指定注解
+	 * @param classes       类存储仓库
+	 * @throws ClassNotFoundException
+	 */
+	private static void addToStore(String fileClassPath, Class<? extends Annotation> anno, Set<Class<?>> classes)
+			throws ClassNotFoundException {
+		// 去掉后面的".class" 获取真正的类名
+		String packageClassPath = fileClassPath.substring(0, fileClassPath.length() - FILETER.length());
+		Class<?> clazz = matchAnno(packageClassPath, anno);
+		if (null != clazz) {
+			classes.add(clazz);
+		}
+	}
+
+	/**
 	 * 匹配注解
 	 * 
-	 * @param packageNameClassName
-	 * @param anno
+	 * @param packageClassPath 指定类带包路径
+	 * @param anno             指定注解
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	private static Class<?> matchAnno(String packageNameClassName, Class<? extends Annotation> anno)
+	private static Class<?> matchAnno(String packageClassPath, Class<? extends Annotation> anno)
 			throws ClassNotFoundException {
-		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(packageNameClassName);
-		boolean find = true;
-		if (anno != null) {
-			find = false;
-			if (clazz.getAnnotation(anno) != null) {
-				find = true;
-			}
-		}
-		if (!find)
+		Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(packageClassPath);
+		if (anno != null && clazz.getAnnotation(anno) == null)
 			clazz = null;
 		return clazz;
 	}
 
-	// --------------------------------------------------------------------------------------------------------
-
+	/**
+	 * 获取实现指定接口的类
+	 * 
+	 * @param clazz      指定接口
+	 * @param classesAll 指定类集合
+	 * @return
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Set<Class<?>> getByInterface(Class clazz, Set<Class<?>> classesAll) {
 		Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
