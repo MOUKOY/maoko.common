@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import soft.common.file.PathUtil;
 import soft.common.model.system.LogLevel;
+import soft.common.system.AppRunPathUitl;
 
 public class Log4j2Writer implements IWriteLog {
 
@@ -21,9 +22,10 @@ public class Log4j2Writer implements IWriteLog {
 	 * @param RunPath
 	 * @throws IOException
 	 */
-	public static void init(String RunPath) throws LoginitException {
+	public static void init() throws LoginitException {
 		try {
-			String filepath = PathUtil.combinePath(RunPath, CONFIGFILE);
+			String runPath = AppRunPathUitl.getRunPath(Log4j2Writer.class);
+			String filepath = PathUtil.combinePath(runPath, CONFIGFILE);
 			File file = new File(filepath);
 			if (!file.exists())// 不存在使用默认值
 			{

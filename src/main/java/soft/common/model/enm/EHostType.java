@@ -7,7 +7,7 @@ package soft.common.model.enm;
  *
  * @date 2016年7月12日下午2:24:08
  */
-public enum HostType {
+public enum EHostType {
 	MASTER((byte) 0), SLAVE((byte) 1);
 
 	private byte code;
@@ -16,7 +16,7 @@ public enum HostType {
 		return code;
 	}
 
-	private HostType(byte _code) {
+	private EHostType(byte _code) {
 		this.code = _code;
 	}
 

@@ -7,7 +7,7 @@ package soft.common.model.enm;
  * @author fanpei
  * @version 创建时间：2016年9月22日 下午2:18:23
  */
-public enum StatusType{
+public enum EStatusType{
 
 	/**
 	 * 正常
@@ -26,7 +26,7 @@ public enum StatusType{
 
 	private byte nCode;
 
-	private StatusType(byte _nCode) {
+	private EStatusType(byte _nCode) {
 		this.nCode = _nCode;
 	}
 

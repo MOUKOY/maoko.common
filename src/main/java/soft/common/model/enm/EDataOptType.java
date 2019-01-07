@@ -7,11 +7,11 @@ package soft.common.model.enm;
  * @author fanpei
  * @version 创建时间：2016年11月7日 下午8:25:20
  */
-public enum DataOptType {
+public enum EDataOptType {
 	Add((byte) 0x00), Delete((byte) 0x01), Update((byte) 0x02);
 	private byte nCode;
 
-	private DataOptType(byte _nCode) {
+	private EDataOptType(byte _nCode) {
 		this.nCode = _nCode;
 	}
 
@@ -19,7 +19,7 @@ public enum DataOptType {
 		return nCode;
 	}
 
-	public static DataOptType getEnum(String code) {
+	public static EDataOptType getEnum(String code) {
 		switch (code) {
 		case "0":
 			return Add;

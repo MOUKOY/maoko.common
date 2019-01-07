@@ -12,11 +12,10 @@ public class App {
 	/**
 	 * 初始化
 	 * 
-	 * @param runpath
 	 * @throws LoginitException
 	 */
-	public static void init(String runpath) throws LoginitException {
-		Log4j2Writer.init(runpath);
+	public static void init() throws LoginitException {
+		Log4j2Writer.init();
 	}
 
 	public static void main(String[] args) {

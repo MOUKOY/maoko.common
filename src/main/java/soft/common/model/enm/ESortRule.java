@@ -8,13 +8,13 @@ package soft.common.model.enm;
  * @author FanPei
  *
  */
-public enum SortRule {
+public enum ESortRule {
 
 	Desc((byte) 0), Asc((byte) 1);
 
 	private byte nCode;
 
-	private SortRule(byte _nCode) {
+	private ESortRule(byte _nCode) {
 		this.nCode = _nCode;
 	}
 
@@ -22,7 +22,7 @@ public enum SortRule {
 		return nCode;
 	}
 
-	public static SortRule getValues(byte code) throws Exception {
+	public static ESortRule getValues(byte code) throws Exception {
 		switch (code) {
 
 		case 0:
