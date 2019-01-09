@@ -69,7 +69,7 @@ public class Log4j2Writer implements IWriteLog {
 	}
 
 	private void print(LogLevel lev, String dscrp, Object... e) {
-		if (log != null && log.isDebugEnabled()) {
+		if (log != null) {
 			switch (lev) {
 			case DEBUG:
 				log.debug(dscrp, e);
