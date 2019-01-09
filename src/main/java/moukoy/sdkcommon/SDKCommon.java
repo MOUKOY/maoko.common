@@ -1,5 +1,7 @@
 package moukoy.sdkcommon;
 
+import java.io.UnsupportedEncodingException;
+
 import soft.common.exception.DataIsNullException;
 import soft.common.exception.OstypeMissWatchException;
 import soft.common.log.Log4j2Writer;
@@ -35,6 +37,11 @@ public class SDKCommon {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
+		try {
+			AppRunPathUitl.getClassRunPath();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

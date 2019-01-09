@@ -76,8 +76,7 @@ public class AppRunPathUitl extends StaticClass {
 				runPath = tmpRunPath;
 				isget = true;
 			} else {
-				URL url = Thread.currentThread().getContextClassLoader().getResource("");
-				runPath = new File(URLDecoder.decode(url.getPath(), "utf-8")).getAbsolutePath();
+				runPath = getClassRunPath();
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -88,6 +87,20 @@ public class AppRunPathUitl extends StaticClass {
 			}
 		}
 		return runPath;
+	}
+
+	public static String getClassRunPath() throws UnsupportedEncodingException {
+		String basePath = AppRunPathUitl.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		basePath = URLDecoder.decode(basePath, "utf-8");
+		if (basePath.endsWith(".jar")) {
+			basePath = basePath.substring(0, basePath.lastIndexOf("/") + 1);
+		} else {
+			URL url = Thread.currentThread().getContextClassLoader().getResource("");
+			basePath = URLDecoder.decode(url.getFile(), "utf-8");
+		}
+		File f = new File(basePath);
+		basePath = f.getAbsolutePath();
+		return basePath;
 	}
 
 }

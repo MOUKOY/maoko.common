@@ -31,6 +31,7 @@ public class Log4j2Writer implements IWriteLog {
 			{
 				String appLogPath = Log4j2Writer.class.getClassLoader().getResource(CONFIGFILE).getPath();
 				file = new File(URLDecoder.decode(appLogPath, "utf-8"));
+				System.err.println(CONFIGFILE + " is not found,sys will use default config");
 			}
 			System.out.println("log4j2.xml path " + file.getAbsolutePath());
 			// InputStream in =
