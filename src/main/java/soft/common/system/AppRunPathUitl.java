@@ -69,22 +69,20 @@ public class AppRunPathUitl extends StaticClass {
 	 */
 	public static String getAppRunPath() {
 		String runPath = null;
-		boolean isget = false;
+		boolean newget = false;
 		try {
 			String tmpRunPath = System.getProperty(SDKCommon.RUNPATH);
 			if (!StringUtil.isStrNullOrWhiteSpace(tmpRunPath)) {
 				runPath = tmpRunPath;
-				isget = true;
 			} else {
+				newget = true;
 				runPath = getClassRunPath();
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
-			if (!isget) {
-				System.setProperty(SDKCommon.RUNPATH, runPath);
-				System.out.println("system run path init:" + runPath);
-			}
+			System.setProperty(SDKCommon.RUNPATH, runPath);
+			System.out.println("system run path init:" + runPath);
 		}
 		return runPath;
 	}
