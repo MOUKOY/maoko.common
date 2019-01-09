@@ -37,7 +37,7 @@
 			<PatternLayout
 				pattern="%d{yyyy/MM/dd HH:mm:ss} %level Loc:%c Lines:%L  Msg:%msg%xEx%n" />
 			<SizeBasedTriggeringPolicy size="10 MB" />
-			<!-- 最多10个日志 -->
+			<!-- 最多20个日志 -->
 			<DefaultRolloverStrategy max="20" />
 		</RollingFile>
 
