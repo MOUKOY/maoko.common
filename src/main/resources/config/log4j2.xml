@@ -19,7 +19,7 @@
 		</Console>
 
 		<RollingFile name="Debug"
-			fileName="${sys:softRun.path}/logs//${APP_NAME}.log"
+			fileName="${sys:softRun.path}/logs/${APP_NAME}.log"
 			filePattern="${sys:softRun.path}/logs/${APP_NAME}_debug-%d{yyyy-MM-dd}_%i.log">
 			<ThresholdFilter level="DEBUG" onMatch="ACCEPT"
 				onMismatch="DENY" />
