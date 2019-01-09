@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import moukoy.sdkcommon.SDKCommon;
 import soft.common.StaticClass;
 import soft.common.StringUtil;
 import soft.common.exception.DataIsNullException;
@@ -21,7 +22,7 @@ import soft.common.model.enm.EOsType;
 public class AppRunPathUitl extends StaticClass {
 
 	/**
-	 * 获取运行路径
+	 * 获取类所在的运行路径
 	 * 
 	 * @param locationClass
 	 * @return
@@ -29,10 +30,10 @@ public class AppRunPathUitl extends StaticClass {
 	 * @throws DataIsNullException
 	 */
 	public static String getRunPath(Class<?> locationClass) throws OstypeMissWatchException, DataIsNullException {
+		String runPath = null;
 		if (null == locationClass)
 			throw new DataIsNullException("locationClass is null");
 
-		String runPath = null;
 		try {
 			URL url = locationClass.getProtectionDomain().getCodeSource().getLocation();
 			runPath = new File(URLDecoder.decode(url.getPath(), "utf-8")).getAbsolutePath();
@@ -53,7 +54,7 @@ public class AppRunPathUitl extends StaticClass {
 				if (!runFile.exists()) {
 					runFile.mkdirs();
 				}
-				System.setProperty("softRun.path", runPath);
+
 			}
 		} catch (UnsupportedEncodingException e) {
 		}
@@ -62,13 +63,31 @@ public class AppRunPathUitl extends StaticClass {
 	}
 
 	/**
-	 * 获取是jar包启动 还是class file启动
+	 * 获取程序运行目录
 	 * 
 	 * @return
 	 */
-	public static String getRunProtocol(Class<?> clazz) {
-		URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
-		return url.getProtocol();
+	public static String getAppRunPath() {
+		String runPath = null;
+		boolean isget = false;
+		try {
+			String tmpRunPath = System.getProperty(SDKCommon.RUNPATH);
+			if (!StringUtil.isStrNullOrWhiteSpace(tmpRunPath)) {
+				runPath = tmpRunPath;
+				isget = true;
+			} else {
+				URL url = Thread.currentThread().getContextClassLoader().getResource("");
+				runPath = new File(URLDecoder.decode(url.getPath(), "utf-8")).getAbsolutePath();
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			if (!isget) {
+				System.setProperty(SDKCommon.RUNPATH, runPath);
+				System.out.println("system run path init:" + runPath);
+			}
+		}
+		return runPath;
 	}
 
 }

@@ -7,9 +7,9 @@ import java.net.URLDecoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import moukoy.sdkcommon.SDKCommon;
 import soft.common.file.PathUtil;
 import soft.common.model.system.LogLevel;
-import soft.common.system.AppRunPathUitl;
 
 public class Log4j2Writer implements IWriteLog {
 
@@ -24,7 +24,7 @@ public class Log4j2Writer implements IWriteLog {
 	 */
 	public static void init() throws LoginitException {
 		try {
-			String runPath = AppRunPathUitl.getRunPath(Log4j2Writer.class);
+			String runPath = System.getProperty(SDKCommon.RUNPATH);
 			String filepath = PathUtil.combinePath(runPath, CONFIGFILE);
 			File file = new File(filepath);
 			if (!file.exists())// 不存在使用默认值
