@@ -1,5 +1,6 @@
 package soft.common;
 
+
 /**
  * @author zoushuai
  * @version V1.0
@@ -11,7 +12,7 @@ package soft.common;
 public class OrderCode2ChilddatasUtil {
 
 	/**
-	 * 将short型的指令码转为需要回复形式的子功能码格式
+	 * 将short型的指令回码转为需要回复形式的子功能码格式
 	 * @param orderCode
 	 * @return
 	 */
@@ -21,6 +22,19 @@ public class OrderCode2ChilddatasUtil {
 		bchilddatas[1]=BConvrtUtil.shortToByte(orderCode)[0];
 		bchilddatas[2]=BConvrtUtil.shortToByte(orderCode)[1];
 		return bchilddatas;
+	}
+	
+	/**
+	 * 将byte[]、需要回复形式的子功能码 转为short型的指令回码
+	 * @param childdatas
+	 * @return
+	 */
+	public static short formatReturnChilddatas2OrderCode(byte[] childdatas){
+		byte[] orderCode_bytes = new byte[2];
+		orderCode_bytes[0] = childdatas[1];
+		orderCode_bytes[1] = childdatas[2]; 
+		short orderCode = BConvrtUtil.byteToShort(orderCode_bytes);
+		return orderCode;
 	}
 	
 }
