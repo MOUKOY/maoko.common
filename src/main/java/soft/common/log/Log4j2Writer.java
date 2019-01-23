@@ -2,8 +2,9 @@ package soft.common.log;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +16,7 @@ public class Log4j2Writer implements IWriteLog {
 
 	private Logger log;
 	public final static String CONFIGFILE = "config/log4j2.xml";
+	public final static String CONFIGFILENAME = "log4j2.xml";
 
 	/**
 	 * 初始化log4j
@@ -27,17 +29,15 @@ public class Log4j2Writer implements IWriteLog {
 			String runPath = System.getProperty(SDKCommon.RUNPATH);
 			String filepath = PathUtil.combinePath(runPath, CONFIGFILE);
 			File file = new File(filepath);
+			String configPath = file.getAbsolutePath();
+			System.out.println("log4j2.xml path " + configPath);
 			if (!file.exists())// 不存在使用默认值
 			{
-				String appLogPath = Log4j2Writer.class.getClassLoader().getResource(CONFIGFILE).getPath();
-				file = new File(URLDecoder.decode(appLogPath, "utf-8"));
+				InputStream in = Log4j2Writer.class.getClassLoader().getResourceAsStream(CONFIGFILE);
+				FileUtils.copyInputStreamToFile(in, file);
 				System.err.println(CONFIGFILE + " is not found,sys will use default config");
 			}
-			System.out.println("log4j2.xml path " + file.getAbsolutePath());
-			// InputStream in =
-			// ConfigUtil.class.getClassLoader().getResourceAsStream("log4j2.xml");
-			// FileCopy.copy(in, filepath, false);
-			System.setProperty("log4j.configurationFile", file.toURI().toURL().toString());
+			System.setProperty("log4j.configurationFile", configPath);
 			// 异步模式
 			// System.setProperty("Log4jContextSelector",
 			// "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
