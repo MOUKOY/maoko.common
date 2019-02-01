@@ -37,4 +37,17 @@ public class OrderCode2ChilddatasUtil {
 		return orderCode;
 	}
 	
+	/**
+	 * 将施封解封操作的childdatas去掉固定的前两位0x0381,转为short型的指令回码
+	 * @param childdatas
+	 * @return
+	 */
+	public static short formatSealUnSealChilddatas(byte[] childdatas){
+		byte[] orderCode_bytes = new byte[2];
+		orderCode_bytes[0] = childdatas[2];
+		orderCode_bytes[1] = childdatas[3];
+		short orderCode = BConvrtUtil.byteToShort(orderCode_bytes);
+		return orderCode;
+	}
+	
 }
