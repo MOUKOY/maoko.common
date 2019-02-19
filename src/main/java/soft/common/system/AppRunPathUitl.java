@@ -79,8 +79,8 @@ public class AppRunPathUitl extends StaticClass {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
-			System.setProperty(SDKCommon.RUNPATH, runPath);
 			System.out.println("system run path init:" + runPath);
+			System.setProperty(SDKCommon.RUNPATH, runPath);
 		}
 		return runPath;
 	}
