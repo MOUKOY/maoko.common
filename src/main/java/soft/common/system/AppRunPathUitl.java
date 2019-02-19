@@ -31,7 +31,7 @@ public class AppRunPathUitl extends StaticClass {
 	 * @throws OstypeMissWatchException
 	 * @throws DataIsNullException
 	 */
-	public static String getRunPath(Class<?> locationClass) throws OstypeMissWatchException, DataIsNullException {
+	public static void initRunPath(Class<?> locationClass) throws OstypeMissWatchException, DataIsNullException {
 		String runPath = null;
 		if (null == locationClass)
 			throw new DataIsNullException("locationClass is null");
@@ -60,7 +60,9 @@ public class AppRunPathUitl extends StaticClass {
 			}
 		} catch (UnsupportedEncodingException e) {
 		}
-		return runPath;
+
+		System.out.println("system run path init:" + runPath);
+		System.setProperty(SDKCommon.RUNPATH, runPath);
 
 	}
 
@@ -71,20 +73,24 @@ public class AppRunPathUitl extends StaticClass {
 	 */
 	public static String getAppRunPath() {
 		String runPath = null;
+		boolean initedRunpath = false;
 		try {
 			String tmpRunPath = System.getProperty(SDKCommon.RUNPATH);
 			if (!StringUtil.isStrNullOrWhiteSpace(tmpRunPath)) {
 				runPath = tmpRunPath;
 			} else {
 				runPath = getClassRunPath2();
+				initedRunpath = true;
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("system run path init:" + runPath);
-			System.setProperty(SDKCommon.RUNPATH, runPath);
+			if (initedRunpath) {
+				System.out.println("system run path init:" + runPath);
+				System.setProperty(SDKCommon.RUNPATH, runPath);
+			}
 		}
 		return runPath;
 	}

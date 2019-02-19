@@ -1,5 +1,6 @@
 package moukoy.sdkcommon;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import soft.common.exception.DataIsNullException;
@@ -36,7 +37,7 @@ public class SDKCommon {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		try {
 			AppRunPathUitl.getClassRunPath2();
 		} catch (UnsupportedEncodingException e) {
