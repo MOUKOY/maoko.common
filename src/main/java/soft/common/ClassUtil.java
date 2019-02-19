@@ -131,7 +131,7 @@ public class ClassUtil extends StaticClass {
 		File file = new File(filePath);
 		// 如果不存在或者 也不是目录就直接返回
 		if (!file.exists() || !file.isDirectory()) {
-			System.err.println("用户定义包名 " + packageName + " 下没有任何文件");
+			System.err.println("用户定义包名 " + packageName + " 不存在或其下没有任何文件");
 			return;
 		}
 		// 如果存在 就获取包下的所有文件
