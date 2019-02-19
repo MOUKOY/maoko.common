@@ -39,8 +39,8 @@ public class SDKCommon {
 
 	public static void main(String[] args) throws IOException {
 		try {
-			AppRunPathUitl.getClassRunPath2();
-		} catch (UnsupportedEncodingException e) {
+			init();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
