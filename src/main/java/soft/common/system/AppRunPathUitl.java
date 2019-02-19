@@ -1,9 +1,11 @@
 package soft.common.system;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Enumeration;
 
 import moukoy.sdkcommon.SDKCommon;
 import soft.common.StaticClass;
@@ -78,6 +80,8 @@ public class AppRunPathUitl extends StaticClass {
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			System.out.println("system run path init:" + runPath);
 			System.setProperty(SDKCommon.RUNPATH, runPath);
@@ -99,12 +103,25 @@ public class AppRunPathUitl extends StaticClass {
 		return basePath;
 	}
 
-	public static String getClassRunPath2() throws UnsupportedEncodingException {
+	public static String getClassRunPath2() throws IOException {
+		String basePath = null;
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		URL url = loader.getResource("");
-		String basePath = URLDecoder.decode(url.getFile(), "utf-8");
-		File f = new File(basePath);
-		basePath = f.getAbsolutePath();
+		Enumeration<URL> urls = loader.getResources("");
+		while (urls.hasMoreElements()) {
+			URL url = urls.nextElement();
+			if (null != url) {
+				basePath = URLDecoder.decode(url.getFile(), "utf-8");
+				if (basePath.endsWith(".jar")) {// 可执行jar包运行的结果里包含".jar"
+					// 获取jar包所在目录
+					basePath = basePath.substring(0, basePath.lastIndexOf("/") + 1);
+				}
+
+				File f = new File(basePath);
+				basePath = f.getAbsolutePath();
+				break;
+			}
+		}
+
 		return basePath;
 	}
 }
