@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="OFF" monitorInterval="60">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<configuration status="DEBUG" monitorInterval="60">
 	<properties>
 		<property name="APP_NAME">sdkCommon</property>
 	</properties>
@@ -17,7 +18,6 @@
 			<PatternLayout
 				pattern="%d{yyyy/MM/dd HH:mm:ss} %level Loc:%c Lines:%L Msg:%msg%xEx%n" />
 		</Console>
-
 		<RollingFile name="Debug"
 			fileName="${sys:softRun.path}/logs/${APP_NAME}.log"
 			filePattern="${sys:softRun.path}/logs/${APP_NAME}_debug-%d{yyyy-MM-dd}_%i.log">
@@ -40,6 +40,5 @@
 			<!-- 最多20个日志 -->
 			<DefaultRolloverStrategy max="20" />
 		</RollingFile>
-
 	</appenders>
 </configuration> 
