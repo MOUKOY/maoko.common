@@ -1,4 +1,4 @@
-package maoko.sdkcommon;
+package maoko.sdk;
 
 import java.io.IOException;
 

@@ -17,7 +17,7 @@ import org.apache.logging.log4j.core.config.DefaultConfiguration;
 
 import maoko.common.file.PathUtil;
 import maoko.common.model.system.LogLevel;
-import maoko.sdkcommon.SDKCommon;
+import maoko.sdk.SDKCommon;
 
 public class Log4j2Writer implements IWriteLog {
 

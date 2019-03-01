@@ -7,13 +7,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 
-import maoko.sdkcommon.SDKCommon;
 import maoko.common.StaticClass;
 import maoko.common.StringUtil;
 import maoko.common.exception.DataIsNullException;
 import maoko.common.exception.OstypeMissWatchException;
 import maoko.common.file.PathUtil;
 import maoko.common.model.enm.EOsType;
+import maoko.sdk.SDKCommon;
 
 /**
  * 程序运行目录获取助手
