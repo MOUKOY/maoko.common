@@ -19,8 +19,8 @@
 				pattern="%d{yyyy/MM/dd HH:mm:ss} %level Loc:%c Lines:%L Msg:%msg%xEx%n" />
 		</Console>
 		<RollingFile name="Debug"
-			fileName="${sys:softRun.path}/logs/${APP_NAME}.log"
-			filePattern="${sys:softRun.path}/logs/${APP_NAME}_debug-%d{yyyy-MM-dd}_%i.log">
+			fileName="${sys:maokoRun.path}/logs/${APP_NAME}.log"
+			filePattern="${sys:maokoRun.path}/logs/${APP_NAME}_debug-%d{yyyy-MM-dd}_%i.log">
 			<ThresholdFilter level="DEBUG" onMatch="ACCEPT"
 				onMismatch="DENY" />
 			<PatternLayout
@@ -30,8 +30,8 @@
 			<DefaultRolloverStrategy max="20" />
 		</RollingFile>
 		<RollingFile name="Error"
-			fileName="${sys:softRun.path}/logs/${APP_NAME}_error.log"
-			filePattern="${sys:softRun.path}/logs/${APP_NAME}_error-%d{yyyy-MM-dd}_%i.log">
+			fileName="${sys:maokoRun.path}/logs/${APP_NAME}_error.log"
+			filePattern="${sys:maokoRun.path}/logs/${APP_NAME}_error-%d{yyyy-MM-dd}_%i.log">
 			<ThresholdFilter level="Error" onMatch="ACCEPT"
 				onMismatch="DENY" />
 			<PatternLayout
