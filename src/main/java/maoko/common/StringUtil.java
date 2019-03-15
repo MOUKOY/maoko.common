@@ -238,18 +238,52 @@ public class StringUtil extends StaticClass {
 	}
 
 	/**
+	 * 获取字节左侧高位char表示形式
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static char getByteLeft(byte b) {
+		return HEX_CHAR[b >>> 4 & 0xf];
+
+	}
+
+	/**
+	 * 获取字节右侧侧低位char表示形式
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static char getByteRight(byte b) {
+		return HEX_CHAR[b & 0xf];
+	}
+
+	/**
 	 * 打印byte
 	 * 
 	 * @param b
 	 * @return
 	 */
 	public static String byte2HexStr(byte b) {
-		char[] chars = new char[4];
-		chars[0] = '0';
-		chars[1] = 'x';
-		chars[2] = HEX_CHAR[b >>> 4 & 0xf];
-		chars[3] = HEX_CHAR[b & 0xf];
-		return new String(chars);
+		StringBuilder chars = new StringBuilder(4);
+		chars.append('0');
+		chars.append('x');
+		chars.append(getByteLeft(b));
+		chars.append(getByteRight(b));
+		return chars.toString();
+	}
+
+	/**
+	 * 获取字节的十六进制形式，无0x前缀
+	 * 
+	 * @param b
+	 * @return
+	 */
+	public static String byte2HexStrNo0X(byte b) {
+		StringBuilder chars = new StringBuilder(2);
+		chars.append(getByteLeft(b));
+		chars.append(getByteRight(b));
+		return chars.toString();
 	}
 
 	public static char[] byte2HexChars(byte b) {
@@ -364,5 +398,44 @@ public class StringUtil extends StaticClass {
 		}
 
 		return datas;
+	}
+
+	/**
+	 * 字符串反转
+	 * 
+	 * @param dStr    待反转字符串
+	 * @param num     一次性翻转的字符串个数，如 dStr="0205",num=2,则反转后的值为：0502
+	 * @param joinStr 加入反转后的分隔符，如 dStr="0205",num=2,jonStr="-",则反转后的值为05-02
+	 * @return
+	 */
+	public static String reverseStr(String dStr, int num, String joinStr) {
+		StringBuilder reverse = new StringBuilder();
+		int length = dStr.length();
+		for (int i = 0; i < length; i++) {
+			if ((i + 1 - num) % 2 == 0) {
+				if (!StringUtil.isStringNull(joinStr))
+					reverse.insert(0, joinStr);
+				reverse.insert(0, dStr.substring(i + 1 - num, i + 1));
+			} else {
+				if (i == length - 1)//
+				{
+					if (!StringUtil.isStringNull(joinStr))
+						reverse.insert(0, joinStr);
+					reverse.insert(0, dStr.charAt(i));
+				}
+			}
+		}
+		return reverse.toString();
+	}
+
+	/**
+	 * 字符串反转
+	 * 
+	 * @param dStr 待反转字符串
+	 * @param num  一次性翻转的字符串个数，如 dStr="0205",num=2,则反转后的值为：0502
+	 * @return
+	 */
+	public static String reverseStr(String dStr, int num) {
+		return reverseStr(dStr, num, null);
 	}
 }
