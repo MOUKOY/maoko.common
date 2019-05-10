@@ -39,7 +39,11 @@ public class AppRunPathUitl extends StaticClass {
 		try {
 			URL url = locationClass.getProtectionDomain().getCodeSource().getLocation();
 			runPath = new File(URLDecoder.decode(url.getPath(), "utf-8")).getAbsolutePath();
-			runPath = PathUtil.getParentDir(runPath);
+			System.err.println("app start path:" + runPath);
+			if (runPath != null && runPath.contains(".jar"))// jar启动取上层目录
+			{
+				runPath = PathUtil.getParentDir(runPath);
+			}
 			EOsType osType = OSPlatformUtil.getOSType();
 			if (runPath == null) {
 				System.out.println("path get fail,init runPath...");
