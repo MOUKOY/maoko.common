@@ -14,6 +14,23 @@ import maoko.common.exception.DataIsNullException;
 public class InstanceUitl extends StaticClass {
 
 	/**
+	 * 根据类全名创建对象
+	 * 
+	 * @param className
+	 * @return
+	 * @throws DataIsNullException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
+	public static Object createObject(String className)
+			throws DataIsNullException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Class<?> clazz = Class.forName(className);
+		return createObject(clazz);
+
+	}
+
+	/**
 	 * 创建T类型对象实例
 	 * 
 	 * @param els
@@ -47,7 +64,7 @@ public class InstanceUitl extends StaticClass {
 		return els.newInstance();
 
 	}
-	
+
 	/**
 	 * @param dscr
 	 * @param els
@@ -61,8 +78,9 @@ public class InstanceUitl extends StaticClass {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public static <T> T createObject( Class<T> els,Object initargs)
-			throws DataIsNullException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public static <T> T createObject(Class<T> els, Object initargs)
+			throws DataIsNullException, InstantiationException, IllegalAccessException, NoSuchMethodException,
+			SecurityException, IllegalArgumentException, InvocationTargetException {
 
 		Constructor<T> ct = els.getConstructor(initargs.getClass());
 		return ct.newInstance(initargs);
