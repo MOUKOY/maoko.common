@@ -17,8 +17,8 @@ import com.google.gson.JsonParser;
  * @date 2017年8月3日下午2:04:47
  */
 public class JSONUtil extends StaticClass {
-	static Gson gson;
-	static JsonParser prParser;
+	protected static Gson gson;
+	protected static JsonParser prParser;
 	static {
 		gson = new Gson();
 		prParser = new JsonParser();
