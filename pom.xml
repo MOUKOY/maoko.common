@@ -5,7 +5,7 @@
 
 	<groupId>maoko</groupId>
 	<artifactId>maoko.common</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 
 	<name>maoko.common</name>
