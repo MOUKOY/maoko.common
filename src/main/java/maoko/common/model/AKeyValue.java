@@ -21,6 +21,9 @@ public abstract class AKeyValue {
 		this.value = value;
 	}
 
+	public AKeyValue() {
+	}
+
 	public AKeyValue(String key, String value) {
 		this.key = key;
 		this.value = value;
