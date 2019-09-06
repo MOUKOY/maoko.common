@@ -11,6 +11,7 @@ import org.apache.commons.lang3.time.FastDateFormat;
  * @author fanpei
  *
  */
+@Deprecated
 public class DateUtil {
 	public static final String FOMATSTR = "yy/MM/dd,HH:mm:ssZ";
 	public static final FastDateFormat CHINA_FORMAT = FastDateFormat.getInstance(FOMATSTR, Locale.CHINA);
