@@ -31,7 +31,7 @@ public class SDKCommon {
 		if (!iniited) {
 			iniited = true;
 			System.out.println("sdkcommon is initing....");
-			AppRunPathUitl.getAppRunPath();// 初始化系统运行目录
+			AppRunPathUitl.getAppRunPathNew();// 初始化系统运行目录
 			Log4j2Writer.init();
 		}
 	}
