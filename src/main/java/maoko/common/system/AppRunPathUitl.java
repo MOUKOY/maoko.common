@@ -99,7 +99,12 @@ public class AppRunPathUitl extends StaticClass {
     }
 
     public static String getAppRunPathNew() {
-        return System.getProperty("user.dir");
+        String runpath = System.getProperty(SDKCommon.RUNPATH);
+        if (StringUtil.isStringNull(runpath)) {
+            runpath = System.getProperty("user.dir");
+            System.setProperty(SDKCommon.RUNPATH, runpath);
+        }
+        return runpath;
     }
 
     public static String getClassRunPath(Class<?> clazz) throws UnsupportedEncodingException {

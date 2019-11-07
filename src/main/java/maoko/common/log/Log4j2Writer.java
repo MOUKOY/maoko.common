@@ -60,8 +60,10 @@ public class Log4j2Writer implements IWriteLog {
             ConfigurationSource source = new ConfigurationSource(inConfStream, file.toURI().toURL());
             context = Configurator.initialize(null, source);
 
-            // 未初始化成功重新加载-与sprigmvc集成时，日志先启动问题修复
-            if (context.getConfiguration() instanceof DefaultConfiguration) {
+            // 未初始化成功重新加载-与springmvc集成时，日志先启动问题修复
+            //未初始化成功重新加载-与springboot集成时，日志配置文件加载非自定义文件修复修复
+            Configuration configuration = context.getConfiguration();
+            if (configuration instanceof DefaultConfiguration || configPath.equals(configuration.getName())) {
                 inConfStream = new FileInputStream(file);
                 source = new ConfigurationSource(inConfStream, file.toURI().toURL());
                 final Configuration config = ConfigurationFactory.getInstance().getConfiguration(context, source);
